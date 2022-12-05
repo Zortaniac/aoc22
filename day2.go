@@ -29,14 +29,14 @@ func day2a() {
 
 		win := (me == "X" && op == "C") || (me == "Z" && op == "B") || (me == "Y" && op == "A")
 
-		me_t := "A"
+		meT := "A"
 		if me == "Y" {
-			me_t = "B"
+			meT = "B"
 		} else if me == "Z" {
-			me_t = "C"
+			meT = "C"
 		}
 
-		if me_t == op {
+		if meT == op {
 			// draw
 			score += 3
 		} else if win {
