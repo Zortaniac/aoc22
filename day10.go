@@ -31,7 +31,6 @@ func day10() {
 
 		row := (cycle-21 % 240)/40
 		pos := (cycle-21) % 40
-		fmt.Println(row, pos)
 		if line == "noop" {
 			if cycle % 40 == 0 {
 				strength += (cycle-20)*x
