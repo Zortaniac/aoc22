@@ -90,7 +90,18 @@ func day12() {
 	}
 
 	fmt.Println(lengthMap[startY][startX])
-	fmt.Println()
+
+	shortest := lengthMap[startY][startX]
+
+	for y := 0; y < len(lengthMap); y++ {
+		for x := 0; x < len(lengthMap[y]); x++ {
+			if heightMap[y][x] == 'a' && lengthMap[y][x] < shortest && lengthMap[y][x] != 0 {
+				shortest = lengthMap[y][x]
+			}
+		}
+	}
+	fmt.Println(shortest)
+
 }
 
 func test(x int, y int, current byte, heightMap [][]byte, lengthMap [][]int) bool {
