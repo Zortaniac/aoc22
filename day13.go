@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -21,6 +22,8 @@ func day13() {
 
 	pair := 1
 	sum := 0
+	packets := [][]interface{}{{[]interface{}{2}}, {[]interface{}{6}}}
+
 	for fileScanner.Scan() {
 		line1 := strings.TrimSpace(fileScanner.Text())
 
@@ -37,23 +40,42 @@ func day13() {
 		left := parse(line1, &i)
 		i = 0
 		right := parse(line2, &i)
-		if r, _ := compare(left, right); r {
+		if r := compare(left, right); r == 1 {
 			sum += pair
 		}
 		pair++
+		packets = append(packets, left)
+		packets = append(packets, right)
 	}
 	err = readFile.Close()
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(sum)
+	sort.Slice(packets, func(i, j int) bool {
+		return compare(packets[i], packets[j]) == 1
+	})
+	div := 1
+	for k, p := range packets {
+		if len(p) != 1 {
+			continue
+		}
+		switch p[0].(type) {
+		case []interface{}:
+			v := p[0].([]interface{})
+			if len(v) == 1 && (v[0] == 2 || v[0] == 6) {
+				div *= k + 1
+			}
+		}
+	}
+	fmt.Println(div)
 }
 
-func compare(left []interface{}, right []interface{}) (bool, bool) {
+func compare(left []interface{}, right []interface{}) int {
 	for i := 0; i < len(left); i++ {
 		if len(right) <= i {
 			// not right order
-			return false, true
+			return -1
 		}
 		leftItemList := false
 		rightItemList := false
@@ -73,7 +95,10 @@ func compare(left []interface{}, right []interface{}) (bool, bool) {
 			if left[i].(int) == right[i].(int) {
 				continue
 			}
-			return left[i].(int) < right[i].(int), true
+			if left[i].(int) < right[i].(int) {
+				return 1
+			}
+			return -1
 		}
 
 		var newLeft []interface{}
@@ -91,15 +116,15 @@ func compare(left []interface{}, right []interface{}) (bool, bool) {
 			newRight = right[i].([]interface{})
 		}
 
-		result, success := compare(newLeft, newRight)
-		if success {
-			return result, true
+		result := compare(newLeft, newRight)
+		if result != 0 {
+			return result
 		}
 	}
 	if len(left) < len(right) {
-		return true, true
+		return 1
 	}
-	return false, false
+	return 0
 }
 
 func parse(line string, idx *int) []interface{} {
