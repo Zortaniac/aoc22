@@ -57,10 +57,10 @@ func day14() {
 					}{x: n, y: first.y}] = true
 				}
 			}
-			if first.x > bottom {
-				bottom = first.x
-			} else if second.x > bottom {
-				bottom = second.x
+			if first.y > bottom {
+				bottom = first.y
+			} else if second.y > bottom {
+				bottom = second.y
 			}
 			first = second
 		}
@@ -69,12 +69,13 @@ func day14() {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	unitCount := 0
-	for true {
+	stop := false
+	part1 := true
+	for !stop {
 		x := 500
 		placed := false
-		for y := 1; y < bottom; y++ {
+		for y := 1; y < bottom+2; y++ {
 			if _, exists := solids[struct {
 				x int
 				y int
@@ -98,15 +99,25 @@ func day14() {
 				x++
 				continue
 			}
+			placed = true
+			if y == 1 {
+				stop = true
+			}
 			solids[struct {
 				x int
 				y int
 			}{x: x, y: y-1}] = true
-			placed = true
 			break
 		}
 		if ! placed {
-			break
+			if part1 {
+				fmt.Println(unitCount)
+				part1 = false
+			}
+			solids[struct {
+				x int
+				y int
+			}{x: x, y: bottom+1}] = true
 		}
 		unitCount++
 	}
