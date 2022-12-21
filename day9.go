@@ -132,10 +132,3 @@ func day9() {
 		fmt.Println(err)
 	}
 }
-
-func Abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
